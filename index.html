@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sana Özel Bir Notum Var Bebişim...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+        /* Genel Stiller */
+        body {
+            margin: 0;
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #F8BBD0; /* Tatlı pembe */
+            color: #4E342E; /* Koyu kahve */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Sayfa İçerik Kartı */
+        .page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 25px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin: 15px;
+            max-width: 400px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page.active { display: flex; }
+
+        h1 { font-size: 1.7em; margin-bottom: 15px; color: #C2185B; }
+        p { font-size: 1.1em; line-height: 1.6; }
+        img.gif { width: 150px; height: auto; margin-bottom: 20px; border-radius: 15px;}
+
+        /* --- YENİ: Butonların içinde olduğu kutu --- */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; /* Butonlar arası boşluk */
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Buton Stilleri */
+        button {
+            padding: 15px 25px;
+            font-size: 1.1em; /* Başlangıç boyutunu biraz ayarladık */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Butonların küçülmesini engelle */
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+        button:active { transform: translateY(-1px); }
+
+        #continueButton { background: linear-gradient(45deg, #7E57C2, #AB47BC); font-size: 1.2em; }
+        #yesButton { background: linear-gradient(45deg, #66BB6A, #4CAF50); }
+        #noButton { background: linear-gradient(45deg, #EF5350, #E53935); }
+        #orderButton { background: linear-gradient(45deg, #29B6F6, #03A9F4); width: 100%; margin-top: 20px; font-size: 1.2em;}
+
+        /* Arka Plan Efektleri (Emoji Tabanlı) */
+        #effects-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .falling-element { position: absolute; top: -10%; animation: fall linear infinite; font-size: 24px; opacity: 0.7; }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Ismarlama Sayfası Stilleri */
+        #treatsPage h1 { font-size: 1.4em; } /* Başlık biraz uzun olduğu için boyutunu ayarladık */
+        .balance-container { background-color: #E1F5FE; border: 2px solid #81D4FA; padding: 10px; border-radius: 10px; margin-bottom: 20px; width: 100%; }
+        #balance { font-size: 1.4em; font-weight: 700; color: #0277BD; }
+        .treat-list { list-style: none; padding: 0; width: 100%; text-align: left; }
+        .treat-item { background: #fff; margin-bottom: 10px; padding: 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .treat-item label { font-size: 1.1em; display: flex; align-items: center; flex-grow: 1; }
+        .treat-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; }
+        .treat-price { font-weight: 700; color: #888; }
+        .heart { color: #E91E63; }
+
+    </style>
+</head>
+<body>
+
+    <div id="effects-container"></div>
+
+    <!-- 1. Sayfa: Açıklama ve Özür -->
+    <div id="explanationPage" class="page active">
+        <img class="gif" src="https://media.tenor.com/Bf42_22r7yMAAAAi/sad-face.gif" alt="Üzgün Surat">
+        <h1>Benim Hatamdı...</h1>
+        <p>
+            Arka plan gürültüsüne gerildim sana yansıttım, çok sormanla alakası yoktu gereksiz laf ettim.
+            Gerçekten çok üzgünüm ve pişmanım.
+        </p>
+        <button id="continueButton">Devamını Oku...</button>
+    </div>
+
+    <!-- 2. Sayfa: Affettin mi Sorusu -->
+    <div id="questionPage" class="page">
+        <img class="gif" src="https://media.tenor.com/E_s_i5Lz2XIAAAAi/please-sad.gif" alt="Yalvaran sevimli karakter">
+        <h1>Bu Eşeği Affettin mi? 🥺</h1>
+        <!-- YENİ: Butonları bir arada tutan kutu -->
+        <div class="button-container">
+            <button id="yesButton">Evet, affettim! ❤️</button>
+            <!-- GÜNCELLENDİ: Emoji eklendi -->
+            <button id="noButton">Hayır 😒</button>
+        </div>
+    </div>
+
+    <!-- 3. Sayfa: Ismarlama Ekranı -->
+    <div id="treatsPage" class="page">
+        <img class="gif" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Mutlu karakterler">
+        <!-- GÜNCELLENDİ: Başlık tam istediğin gibi -->
+        <h1>Bebişime affettiğimi göstermek için ısmarlamak istiyorum:</h1>
+        <div class="balance-container">
+            Ticket Bakiye: <span id="balance"></span>
+        </div>
+        <ul class="treat-list">
+            <li class="treat-item">
+                <label>
+                    <input type="checkbox" data-price="55" data-name="Browni">
+                    <span>Browni</span>
+                </label>
+                <span class="treat-price">55 TL</span>
+            </li>
+            <li class="treat-item">
+                <label>
+                    <input type="checkbox" data-price="100" data-name="Yoğurt">
+                    <span>Yoğurt</span>
+                </label>
+                <span class="treat-price">100 TL</span>
+            </li>
+            <li class="treat-item">
+                <label>
+                    <input type="checkbox" data-price="200" data-name="Tadıbu">
+                    <span>Tadıbu <span class="heart">❤️❤️</span></span>
+                </label>
+                <span class="treat-price">200 TL</span>
+            </li>
+        </ul>
+        <button id="orderButton">Ismarla!</button>
+    </div>
+
+
+    <script>
+        // Sayfa ve Buton Elementleri
+        const explanationPage = document.getElementById('explanationPage');
+        const questionPage = document.getElementById('questionPage');
+        const treatsPage = document.getElementById('treatsPage');
+        const continueButton = document.getElementById('continueButton');
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const orderButton = document.getElementById('orderButton');
+
+        // Sayfa Geçişleri
+        continueButton.addEventListener('click', () => {
+            explanationPage.classList.remove('active');
+            questionPage.classList.add('active');
+        });
+
+        yesButton.addEventListener('click', () => {
+            questionPage.classList.remove('active');
+            treatsPage.classList.add('active');
+        });
+
+        // "Hayır" Butonu Kaçma Mantığı
+        noButton.addEventListener('mouseover', moveButton);
+        noButton.addEventListener('click', moveButton); 
+        function moveButton() {
+            // Butonun serbestçe hareket etmesi için pozisyonunu değiştiriyoruz.
+            // Bu sayede yan yana durduğu kutudan (flex container) çıkmış oluyor.
+            noButton.style.position = 'absolute';
+            
+            const container = document.body.getBoundingClientRect();
+            const btnWidth = noButton.offsetWidth;
+            const btnHeight = noButton.offsetHeight;
+            
+            noButton.style.top = `${Math.random() * (container.height - btnHeight)}px`;
+            noButton.style.left = `${Math.random() * (container.width - btnWidth)}px`;
+
+            // GÜNCELLENDİ: Evet butonunu her seferinde biraz daha büyüt
+            const currentScale = yesButton.style.transform ? parseFloat(yesButton.style.transform.replace('scale(', '')) : 1;
+            yesButton.style.transform = `scale(${currentScale + 0.1})`;
+        }
+
+        // Arka Plan Efekt Mantığı (Emoji ile daha stabil)
+        const effectsContainer = document.getElementById('effects-container');
+        const icons = ['🐥', '🍄'];
+        setInterval(() => {
+            const element = document.createElement('span');
+            element.classList.add('falling-element');
+            element.innerText = icons[Math.floor(Math.random() * icons.length)];
+            element.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 5 + 8; // 8-13 saniye
+            element.style.animationDuration = duration + 's';
+            element.style.fontSize = (Math.random() * 16 + 16) + 'px'; // 16-32px
+            effectsContainer.appendChild(element);
+            setTimeout(() => element.remove(), duration * 1000);
+        }, 350);
+
+        // Ismarlama Sayfası Mantığı (Değişiklik yok)
+        const balanceDisplay = document.getElementById('balance');
+        const checkboxes = document.querySelectorAll('.treat-item input[type="checkbox"]');
+        let initialBalance = 568.68;
+        let currentBalance = initialBalance;
+
+        function formatCurrency(value) {
+            return value.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+        }
+
+        function updateBalance() {
+            balanceDisplay.textContent = formatCurrency(currentBalance);
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                let totalCost = 0;
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        totalCost += parseFloat(cb.dataset.price);
+                    }
+                });
+                currentBalance = initialBalance - totalCost;
+                updateBalance();
+            });
+        });
+
+        orderButton.addEventListener('click', () => {
+            const selectedItems = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    selectedItems.push(cb.dataset.name);
+                }
+            });
+
+            const itemsText = selectedItems.length > 0 ? selectedItems.join(', ') : "hiçbir şey";
+            const email = 'ogznucr@gmail.com';
+            const subject = 'Bebişime ısmarlamak istiyorum';
+            const body = `Bebişime şu itemleri: ${itemsText} ısmarlamayı onaylıyorum.\n\nBetül Çelik\nTıkı Tıkı Specialist`;
+
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        });
+
+        updateBalance();
+    </script>
+
+</body>
+</html>
